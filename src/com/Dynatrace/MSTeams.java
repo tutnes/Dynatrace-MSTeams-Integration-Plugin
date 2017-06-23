@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 
 
-public class SlackChat implements ActionV2 {
+public class MSTeams implements ActionV2 {
 
 	private static final Logger log = Logger.getLogger(SlackChat.class.getName());
 
