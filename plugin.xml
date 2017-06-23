@@ -5,8 +5,8 @@
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="com.Slack.Chat" name="SlackChat">
     <information>
       <category value="" />
-      <displayname value="SlackChat" />
-      <description value="This Dynatrace plugin can send incident messages to a webhook defined in slack" />
+      <displayname value="MS Teams" />
+      <description value="This Dynatrace plugin can send incident messages to a webhook defined in Microsoft Teams" />
       <supportlevel value="unsupported" />
     </information>
     <configuration>
