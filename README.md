@@ -8,8 +8,14 @@ I used the code from [HipChat](https://github.com/dynaTrace/Dynatrace-HipChat-Pl
 
 Tested with Dynatrace 7.0.6.1013 this works.
 
+![Incident Started](https://github.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/raw/master/images/readme/incident_started.png "Incident Started")
+
+![Incident Ended](https://github.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/raw/master/images/readme/incident_ended.png "Incident Ended")
+
+
+
 ## Installation
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
 
 ## Future development
 It is entirely possible to use the Action buttons in Teams to close Incidents with comments.
