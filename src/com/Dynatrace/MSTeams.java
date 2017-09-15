@@ -75,7 +75,7 @@ public class MSTeams implements ActionV2 {
 	 */
 	@Override
 	public Status execute(ActionEnvironment env) throws Exception {
-
+        String systemProfileName = env.getSystemProfileName();
         //MAP ALL INCIDENTS A COLLECTION
 		Collection<Incident> incidents = env.getIncidents();
 		
@@ -104,10 +104,12 @@ public class MSTeams implements ActionV2 {
 			String incidentRule;
 			String startTime;
 			String endTime;
+			String incidentTime;
 			String incidentStatus;
 			String incidentSeverity;
             String incidentViolation = "";
-            String incidentImage = "";
+            String incidentImage;
+            String incidentColor = "";
                         //JSON CREATION
 			JSONObject jsonObj = new JSONObject();
                         
@@ -117,30 +119,34 @@ public class MSTeams implements ActionV2 {
 
                         incidentUUID = incident.getKey().getUUID() + "\n";
                         
-                        startTime = incident.getStartTime() + "\n";
-                        endTime = incident.getEndTime() + "\n";
+                        startTime = incident.getStartTime().toString();
+                        endTime = incident.getEndTime().toString();
                         
                         if (incident.isOpen()){
                              incidentStatus = "Started";
-			}
+                             incidentColor = "ff0000";
+                             incidentTime = "Start time: " + startTime;
+			            }
                         else if (incident.isClosed()){
                             incidentStatus = "Ended";
+                            incidentColor = "00ff00";
+                            incidentTime = "Start time: " + startTime + "\n";
+                            incidentTime += "End time: " + endTime;
                         }
                         else {
 							incidentStatus = "Unknown status";
+                            incidentStatus = "Unknown status";
+                            incidentTime = "Unknown time";
                         }
-						incidentSeverity = incident.getSeverity().toString();
+						incidentSeverity = getSeverityAsString(incident);
 
-                        if (incidentStatus == "Started") {
+                        if (incidentStatus.equals("Started")) {
 							incidentImage = "https://raw.githubusercontent.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/master/images/incident-severe.png";
 						}
 						else {
 							incidentImage = "https://raw.githubusercontent.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/master/images/incident-ended.png";
 						}
 
-
-
-                        
                         for (Violation violation : incident.getViolations()) {
                             incidentViolation = "Violated Measure: " + violation.getViolatedMeasure().getName() + " - Threshold: " + violation.getViolatedThreshold().getValue();
 						}
@@ -150,18 +156,15 @@ public class MSTeams implements ActionV2 {
              * Create JSON Object => Will be sent to SlackChat via HTTP POST
              */
 
-			jsonObj.put("summary", "Alert");
-            jsonObj.put("title", "Incidentrule: " + incidentRule + " Breached");
-            jsonObj.put("text", incidentViolation);
-			String jayson = "{\n" +
+				String jayson = "{\n" +
 					"  \"summary\": \"Alert\",\n" +
-					"  \"themeColor\": \"0078D7\",\n" +
-					"  \"title\": \" " + incidentSeverity + "Incident " + incidentStatus + incidentRule + "\",\n" +
+					"  \"themeColor\": \"" + incidentColor + "\",\n" +
+					"  \"title\": \" "+ incidentSeverity + " Incident " + incidentStatus + ": " + incidentRule + "\",\n" +
 					"  \"sections\": [\n" +
 					"    {\n" +
-					"      \"activityTitle\": \"David Claux\",\n" +
-					"      \"activitySubtitle\": \"9/13/2016, 3:34pm\",\n" +
-					"      \"activityImage\": \" " + incidentImage + "  \",\n" +
+					"      \"activityTitle\": \"Alert\",\n" +
+					"      \"activitySubtitle\": \"" + incidentTime +"\",\n" +
+					"      \"activityImage\": \"" + incidentImage + "\",\n" +
 					"      \"facts\": [\n" +
 					"        {\n" +
 					"          \"name\": \"Agents:\",\n" +
@@ -173,10 +176,10 @@ public class MSTeams implements ActionV2 {
 					"        },\n" +
 					"        {\n" +
 					"          \"name\": \"System profile:\",\n" +
-					"          \"value\": \"(none)\"\n" +
+					"          \"value\": \""+ systemProfileName +"\"\n" +
 					"        }\n" +
 					"      ],\n" +
-					"      \"text\": \"Connection to a previously connected Application Process/Agent has been lost and agent has not been able to disconnect...\"\n" +
+					"      \"text\": \"" + incidentMessage + "\"\n" +
 					"    }\n" +
 					"  ]\n" +
 					"}";
@@ -190,7 +193,7 @@ public class MSTeams implements ActionV2 {
 
 
 
-
+            //log.info(jayson);
 
 
 
@@ -311,4 +314,17 @@ public class MSTeams implements ActionV2 {
 	public void teardown(ActionEnvironment env) throws Exception {
 		// TODO
 	}
+    private String getSeverityAsString(Incident incident) {
+        if (incident.getSeverity() != null) {
+            switch (incident.getSeverity()) {
+                case Error:
+                    return "Critical";
+                case Informational:
+                    return "Information";
+                case Warning:
+                    return "Warning";
+            }
+        }
+        return "";
+    }
 }
