@@ -1,32 +1,28 @@
 {
   "summary": "Alert",
   "themeColor": "0078D7",
-  "title": "Card created: \"Name of card\"",
+  "title": "Severe Incident started: Application Process Unavailable (unexpected)",
   "sections": [
     {
       "activityTitle": "David Claux",
       "activitySubtitle": "9/13/2016, 3:34pm",
-      "activityImage": "https://connectorsdemo.azurewebsites.net/images/MSC12_Oscar_002.jpg",
+      "activityImage": "https://raw.githubusercontent.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/master/images/incident-ended.png",
       "facts": [
         {
-          "name": "Board:",
-          "value": "Name of board"
-        },
-        {
-          "name": "List:",
+          "name": "Agents:",
           "value": "Name of list"
         },
         {
-          "name": "Assigned to:",
+          "name": "Hosts:",
           "value": "(none)"
         },
         {
-          "name": "Due date:",
+          "name": "System profile:",
           "value": "(none)"
         }
       ],
-      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      "text": "Connection to a previously connected Application Process/Agent has been lost and agent has not been able to disconnect..."
     }
   ]
-}a
+}
  

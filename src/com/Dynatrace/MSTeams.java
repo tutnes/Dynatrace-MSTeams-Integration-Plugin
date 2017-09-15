@@ -107,7 +107,7 @@ public class MSTeams implements ActionV2 {
 			String incidentStatus;
 			String incidentSeverity;
             String incidentViolation = "";
-                        
+            String incidentImage = "";
                         //JSON CREATION
 			JSONObject jsonObj = new JSONObject();
                         
@@ -121,17 +121,24 @@ public class MSTeams implements ActionV2 {
                         endTime = incident.getEndTime() + "\n";
                         
                         if (incident.isOpen()){
-                             incidentStatus = "Open";
+                             incidentStatus = "Started";
 			}
                         else if (incident.isClosed()){
-                            incidentStatus = "Closed";
+                            incidentStatus = "Ended";
                         }
                         else {
 							incidentStatus = "Unknown status";
                         }
-                        
+						incidentSeverity = incident.getSeverity().toString();
 
-                        incidentSeverity = incident.getSeverity().toString();
+                        if (incidentStatus == "Started") {
+							incidentImage = "https://raw.githubusercontent.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/master/images/incident-severe.png";
+						}
+						else {
+							incidentImage = "https://raw.githubusercontent.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/master/images/incident-ended.png";
+						}
+
+
 
                         
                         for (Violation violation : incident.getViolations()) {
@@ -143,15 +150,56 @@ public class MSTeams implements ActionV2 {
              * Create JSON Object => Will be sent to SlackChat via HTTP POST
              */
 
-			jsonObj.put("summary", incidentSeverity + " Alert ");
+			jsonObj.put("summary", "Alert");
             jsonObj.put("title", "Incidentrule: " + incidentRule + " Breached");
             jsonObj.put("text", incidentViolation);
+			String jayson = "{\n" +
+					"  \"summary\": \"Alert\",\n" +
+					"  \"themeColor\": \"0078D7\",\n" +
+					"  \"title\": \" " + incidentSeverity + "Incident " + incidentStatus + incidentRule + "\",\n" +
+					"  \"sections\": [\n" +
+					"    {\n" +
+					"      \"activityTitle\": \"David Claux\",\n" +
+					"      \"activitySubtitle\": \"9/13/2016, 3:34pm\",\n" +
+					"      \"activityImage\": \" " + incidentImage + "  \",\n" +
+					"      \"facts\": [\n" +
+					"        {\n" +
+					"          \"name\": \"Agents:\",\n" +
+					"          \"value\": \"Name of list\"\n" +
+					"        },\n" +
+					"        {\n" +
+					"          \"name\": \"Hosts:\",\n" +
+					"          \"value\": \"(none)\"\n" +
+					"        },\n" +
+					"        {\n" +
+					"          \"name\": \"System profile:\",\n" +
+					"          \"value\": \"(none)\"\n" +
+					"        }\n" +
+					"      ],\n" +
+					"      \"text\": \"Connection to a previously connected Application Process/Agent has been lost and agent has not been able to disconnect...\"\n" +
+					"    }\n" +
+					"  ]\n" +
+					"}";
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                         
                         
                         //JSON TO STRING
-			String jsonString = jsonObj.toJSONString();
-                        
+			//String jsonString = jsonObj.toJSONString();
+			String jsonString = jayson;
+
 			//LOG JSON STRING
 			log.fine("JSON String is: " + jsonString);
 			
