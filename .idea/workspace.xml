@@ -30,8 +30,8 @@
       <file leaf-file-name="MSTeams.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/Dynatrace/MSTeams.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="165" column="70" lean-forward="false" selection-start-line="165" selection-start-column="70" selection-end-line="165" selection-end-column="70" />
+            <state relative-caret-position="425">
+              <caret line="152" column="56" lean-forward="false" selection-start-line="152" selection-start-column="56" selection-end-line="152" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -534,12 +534,12 @@
       <updated>1498228359798</updated>
       <workItem from="1498228382035" duration="2717000" />
       <workItem from="1499185558676" duration="53000" />
-      <workItem from="1505507391460" duration="6455000" />
+      <workItem from="1505507391460" duration="8928000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9225000" />
+    <option name="totallyTimeSpent" value="11698000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
@@ -639,14 +639,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Dynatrace/SlackChat.java" />
-    <entry file="file://$PROJECT_DIR$/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="11" lean-forward="false" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/exampleformat.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
@@ -655,10 +647,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="11" lean-forward="false" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/Dynatrace/MSTeams.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="165" column="70" lean-forward="false" selection-start-line="165" selection-start-column="70" selection-end-line="165" selection-end-column="70" />
+        <state relative-caret-position="425">
+          <caret line="152" column="56" lean-forward="false" selection-start-line="152" selection-start-column="56" selection-end-line="152" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

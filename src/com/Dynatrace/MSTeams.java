@@ -130,8 +130,8 @@ public class MSTeams implements ActionV2 {
                         else if (incident.isClosed()){
                             incidentStatus = "Ended";
                             incidentColor = "00ff00";
-                            incidentTime = "Start time: " + startTime + "\n";
-                            incidentTime += "End time: " + endTime;
+                     //       incidentTime = "Start time: " + startTime + "\\n";
+                            incidentTime = "End time: " + endTime;
                         }
                         else {
 							incidentStatus = "Unknown status";
@@ -149,6 +149,10 @@ public class MSTeams implements ActionV2 {
 
                         for (Violation violation : incident.getViolations()) {
                             incidentViolation = "Violated Measure: " + violation.getViolatedMeasure().getName() + " - Threshold: " + violation.getViolatedThreshold().getValue();
+                            for (Violation.TriggerValue trigger : violation.getTriggerValues()) {
+                                incidentViolation += "- Value: " + trigger.getValue().toString();
+                                //log.info(trigger.getValue().toString());
+                            }
 						}
 
 			
@@ -159,12 +163,13 @@ public class MSTeams implements ActionV2 {
 				String jayson = "{\n" +
 					"  \"summary\": \"Alert\",\n" +
 					"  \"themeColor\": \"" + incidentColor + "\",\n" +
-					"  \"title\": \" "+ incidentSeverity + " Incident " + incidentStatus + ": " + incidentRule + "\",\n" +
+					"  \"title\": \" "+ incidentSeverity + " Incident: " + incidentRule + "\",\n" +
 					"  \"sections\": [\n" +
 					"    {\n" +
-					"      \"activityTitle\": \"Alert\",\n" +
+					"      \"activityTitle\": \"**" + incidentStatus + "**\",\n" +
 					"      \"activitySubtitle\": \"" + incidentTime +"\",\n" +
 					"      \"activityImage\": \"" + incidentImage + "\",\n" +
+                    "      \"activityText\": \"" + incidentViolation + "\",\n" +
 					"      \"facts\": [\n" +
 					"        {\n" +
 					"          \"name\": \"Agents:\",\n" +
