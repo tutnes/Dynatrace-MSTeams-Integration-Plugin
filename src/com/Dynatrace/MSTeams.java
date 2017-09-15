@@ -15,8 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Logger;
-import org.json.simple.JSONObject;
-
+import org.apache.commons.lang3.StringUtils;
 
 public class MSTeams implements ActionV2 {
 
@@ -110,8 +109,11 @@ public class MSTeams implements ActionV2 {
             String incidentViolation = "";
             String incidentImage;
             String incidentColor = "";
+            String sourceType = "";
+            String sourceName = "";
+            String sourceHostName = "";
                         //JSON CREATION
-			JSONObject jsonObj = new JSONObject();
+			//JSONObject jsonObj = new JSONObject();
                         
                         // Compose string chat_message => This message will be sent to the SlackChat channel
 
@@ -149,9 +151,25 @@ public class MSTeams implements ActionV2 {
 
                         for (Violation violation : incident.getViolations()) {
                             incidentViolation = "Violated Measure: " + violation.getViolatedMeasure().getName() + " - Threshold: " + violation.getViolatedThreshold().getValue();
+                            Measure violatedMeasure = violation.getViolatedMeasure();
+                            Source source = violatedMeasure.getSource();
+							MonitorSource monitorSource;
+                            if (source.getSourceType() == SourceType.Monitor) {
+                                sourceType = "Monitor";
+                                sourceName = (monitorSource = (MonitorSource)source).getName();
+                                String sMeasure = violatedMeasure.getName();
+                                if(sMeasure.contains("@"))
+                                {
+                                    sourceHostName = StringUtils.substringAfter(sMeasure, "@");
+                                    sourceHostName = StringUtils.substringBefore(sourceHostName,")");
+                                 }
+                            } else if (source.getSourceType() == SourceType.Agent) {
+                                sourceType = "Agent";
+                                sourceName = ((AgentSource) source).getName().toString();
+                                sourceHostName = ((AgentSource) source).getHost().toString();
+                            }
                             for (Violation.TriggerValue trigger : violation.getTriggerValues()) {
                                 incidentViolation += "- Value: " + trigger.getValue().toString();
-                                //log.info(trigger.getValue().toString());
                             }
 						}
 
@@ -172,12 +190,12 @@ public class MSTeams implements ActionV2 {
                     "      \"activityText\": \"" + incidentViolation + "\",\n" +
 					"      \"facts\": [\n" +
 					"        {\n" +
-					"          \"name\": \"Agents:\",\n" +
-					"          \"value\": \"Name of list\"\n" +
+					"          \"name\": \""+ sourceType +"\",\n" +
+					"          \"value\": \""+ sourceName +"\"\n" +
 					"        },\n" +
 					"        {\n" +
 					"          \"name\": \"Hosts:\",\n" +
-					"          \"value\": \"(none)\"\n" +
+					"          \"value\": \"" + sourceHostName+"\"\n" +
 					"        },\n" +
 					"        {\n" +
 					"          \"name\": \"System profile:\",\n" +
