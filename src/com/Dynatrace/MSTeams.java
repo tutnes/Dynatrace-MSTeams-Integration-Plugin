@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 
 public class MSTeams implements ActionV2 {
 
-	private static final Logger log = Logger.getLogger(SlackChat.class.getName());
+	private static final Logger log = Logger.getLogger(MSTeams.class.getName());
 
 
 	/**
@@ -75,27 +75,16 @@ public class MSTeams implements ActionV2 {
 	 */
 	@Override
 	public Status execute(ActionEnvironment env) throws Exception {
-		/*
-		// this sample shows how to receive and act on incidents
-		Collection<Incident> incidents = env.getIncidents();
-		for (Incident incident : incidents) {
-			String message = incident.getMessage();
-			log.info("Incident " + message + " triggered.");
-			for (Violation violation : incident.getViolations()) {
-				log.info("Measure " + violation.getViolatedMeasure().getName() + " violoated threshold.");
-			}
-		}
-		*/
-            
-                //MAP ALL INCIDENTS A COLLECTION
+
+        //MAP ALL INCIDENTS A COLLECTION
 		Collection<Incident> incidents = env.getIncidents();
 		
 		//FOR EACH INCIDENT
 		for (Incident incident : incidents) {
 			
 			//LOG INCIDENT MESSAGE
-			String message = incident.getMessage();
-			log.fine("Incident " + message + " triggered.");
+			String incidentMessage = incident.getMessage();
+			log.fine("Incident " + incidentMessage + " triggered.");
 			
 			//SET URL FROM USER INPUT FIELD
 			URL url = env.getConfigUrl("url");
@@ -111,48 +100,53 @@ public class MSTeams implements ActionV2 {
 			InputStream in;
 			int responseCode;
 			String responseBody;
+			String incidentUUID;
+			String incidentRule;
+			String startTime;
+			String endTime;
+			String incidentStatus;
+			String incidentSeverity;
+            String incidentViolation = "";
                         
                         //JSON CREATION
 			JSONObject jsonObj = new JSONObject();
                         
                         // Compose string chat_message => This message will be sent to the SlackChat channel
-                        String chat_message = null;
-                        chat_message = "Dynatrace incident triggered:\n " + incident.getIncidentRule().getName();
-                        //chat_message = chat_message + " <ul>";
-                        chat_message = chat_message + "Incident UUID: " + incident.getKey().getUUID() + "\n";
+
+                        incidentRule = incident.getIncidentRule().getName();
+
+                        incidentUUID = incident.getKey().getUUID() + "\n";
                         
-                        chat_message = chat_message + "Incident start: " + incident.getStartTime() + "\n";
-                        chat_message = chat_message + "Incident end: " + incident.getEndTime() + "\n";
+                        startTime = incident.getStartTime() + "\n";
+                        endTime = incident.getEndTime() + "\n";
                         
                         if (incident.isOpen()){
-                            chat_message = chat_message + "Status: Open \n";
+                             incidentStatus = "Open";
 			}
                         else if (incident.isClosed()){
-                            chat_message = chat_message + "Status: Closed \n";
+                            incidentStatus = "Closed";
                         }
                         else {
-                            chat_message = chat_message + "Status: Unknown status \n";
+							incidentStatus = "Unknown status";
                         }
                         
-//                        chat_message = chat_message + "<li><strong>Status state code:</strong> " + incident.getState() + "</li>";
-                        
-                        chat_message = chat_message + "Severity: " + incident.getSeverity().toString() + "\n";
-                        chat_message = chat_message + "Message: " + message + "\n";
+
+                        incidentSeverity = incident.getSeverity().toString();
+
                         
                         for (Violation violation : incident.getViolations()) {
-                            chat_message = chat_message + "Violated Measure: " + violation.getViolatedMeasure().getName() + " - Threshold: " + violation.getViolatedThreshold().getValue() + "\n";
-			}
-                        
-                        //chat_message = chat_message + "</ul>";
+                            incidentViolation = "Violated Measure: " + violation.getViolatedMeasure().getName() + " - Threshold: " + violation.getViolatedThreshold().getValue();
+						}
+
 			
-                        /*
-                         * Create JSON Object => Will be sent to SlackChat via HTTP POST
-                         */
-			// Some lines commented out from SlackChat, which are not needed.
-			//jsonObj.put("color", "green");
-			jsonObj.put("text", chat_message);
-			//jsonObj.put("notify", false);
-			//jsonObj.put("message_format", "html");
+            /*
+             * Create JSON Object => Will be sent to SlackChat via HTTP POST
+             */
+
+			jsonObj.put("summary", incidentSeverity + " Alert ");
+            jsonObj.put("title", "Incidentrule: " + incidentRule + " Breached");
+            jsonObj.put("text", incidentViolation);
+
                         
                         
                         //JSON TO STRING
@@ -220,31 +214,6 @@ public class MSTeams implements ActionV2 {
                             return new Status (Status.StatusCode.ErrorInternalException);
 			}
 
-//			//TRY TO GET INPUT STREAM
-//			try{
-//                            if(responseCode == 200){
-//                            	in = con.getInputStream();
-//                            }
-//                            else{
-//				in = con.getErrorStream();
-//                            }
-//				
-//                            BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
-//			    responseBody = bufferReader.readLine();
-//			    bufferReader.close();
-//			    if(responseCode != 200){
-//			    	log.warning("Response code was: " + responseCode);
-//			    	log.warning("Error received from PagerDuty: " + responseBody);
-//			    }
-//			}
-//			
-//			//CATCH EXCEPTION, LOG IT THEN SEND RESPONSE ERROR CODE
-//			catch (IOException e) {
-//				log.severe("Exception thrown whilst reading from input stream...");
-//				log.severe(e.toString());
-//				return new Status (Status.StatusCode.ErrorInternalException);
-//			}
-			
 			//DISCONNECT
 			finally{
 				con.disconnect();
