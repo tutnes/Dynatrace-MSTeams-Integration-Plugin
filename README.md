@@ -32,7 +32,20 @@ Choose a name for the Webhook, and if you want to, an image.
 
 ![Copy Webhook](https://github.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/raw/master/images/readme/copy_webhook.png "Copy Webhook")
 
-Copy the Webhook URL and keep it.
+Copy the Webhook URL and keep it. Click Done.
+
+## Dynatrace Configuration
+Install the plugin
+
+
+
+![Configure plugin](https://github.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/raw/master/images/readme/configure_dynatrace.png "Configure Plugin") 
+
+Configure the plugin to point to the Webhook URL from the previous section
+
+![Configure Incidentrule](https://github.com/tutnes/Dynatrace-MSTeams-Integration-Plugin/raw/master/images/readme/edit_incident_rule.png "Configure Incidentrule")
+
+Add the plugin as an action on an Incident Rule
 
 ## Future development
 It is entirely possible to use the Action buttons in Teams to close Incidents with comments.
